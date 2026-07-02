@@ -146,10 +146,7 @@ OD_API_TOKEN=
 # Optional escape hatch for deployments whose reverse proxy already authenticates
 # every request before it reaches the daemon. Set to 1 only for trusted setups;
 # when enabled, the daemon skips OD_API_TOKEN enforcement entirely.
-# NOTE: For local Docker development (which binds to 127.0.0.1 on the host but
-# 0.0.0.0 internally), this is set to 1 by default so the container starts
-# without a token. Clear this and set OD_API_TOKEN if exposing remotely.
-OPEN_DESIGN_DISABLE_API_AUTH=1
+OPEN_DESIGN_DISABLE_API_AUTH=
 ```
 
 ---
