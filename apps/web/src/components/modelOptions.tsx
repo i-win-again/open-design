@@ -16,7 +16,11 @@ export function renderModelOptions(models: AgentModelOption[]) {
     arr.push(m);
     groups.set(provider, arr);
   }
-  flat.sort((a, b) => (a.id === 'default' ? -1 : b.id === 'default' ? 1 : 0));
+  flat.sort((a, b) => {
+    if (a.id === 'default') return -1;
+    if (b.id === 'default') return 1;
+    return a.label.localeCompare(b.label);
+  });
   if (groups.size === 0) {
     return (
       <>
@@ -35,9 +39,13 @@ export function renderModelOptions(models: AgentModelOption[]) {
           {m.label}
         </option>
       ))}
-      {Array.from(groups.entries()).map(([provider, items]) => (
+      {Array.from(groups.entries())
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([provider, items]) => (
         <optgroup key={provider} label={provider}>
-          {items.map((m) => (
+          {items
+            .sort((a, b) => a.label.localeCompare(b.label))
+            .map((m) => (
             <option key={m.id} value={m.id}>
               {m.label.startsWith(`${provider}/`)
                 ? m.label.slice(provider.length + 1)
@@ -108,7 +116,13 @@ export const SearchableModelSelect = forwardRef<
         merged.set(option.value, { id: option.value, label: option.label });
       }
     }
-    return Array.from(merged.values());
+    const result = Array.from(merged.values());
+    result.sort((a, b) => {
+      if (a.id === 'default') return -1;
+      if (b.id === 'default') return 1;
+      return a.label.localeCompare(b.label);
+    });
+    return result;
   }, [additionalOptions, models]);
   const selectedOption =
     allOptions.find((option) => option.id === value) ??
